@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react' ;
+import React, { useState } from 'react' ;
 import styled from 'styled-components' ;
 
-import io from 'socket.io-client' ;
-
-const ENDPOINT = 'http://192.168.0.30:9300/chat/231' ;
+import { Link } from 'react-router-dom' ;
 
 const Container = styled.div`
     width : 100% ;
@@ -33,7 +31,7 @@ const ButtonContainer = styled.div`
 const Input = styled.input`
     all : unset ;
 
-    width : 100% ;
+    /* width : 100% ; */
     height : 40px ;
 
     border : 1px solid #111 ;
@@ -48,7 +46,7 @@ const RoomFindButton = styled(Input)`
 `;
 
 const RoomCreateButton = styled(Input)`
-
+    width : 100px ;
 `;
 
 const Form = styled.form`
@@ -64,28 +62,24 @@ const CodeButton = styled(Input)`
     width : 70px ;
 `;
 
-let socket ;
-
 const Home = () => {
     const [ load, setLoad ] = useState(true) ;
 
-    useEffect(() => {
-        try {
+    // useEffect(async () => {
+    //     try {
 
-            socket = io(ENDPOINT) ;
+    //     } catch {
             
-            console.log(socket) ;
+    //     } finally {
+    //         setLoad(false) ;   
+    //     }
 
-        } catch {
-            
-        } finally {
-            setLoad(false) ;   
-        }
-    }, []) ;
+    // }, []) ;
 
-    function RoomFindOnClick() {
-
+    function RoomFindOnClick () {
+        
     }
+
 
     function RoomCreateOnClick() {
 
@@ -104,12 +98,14 @@ const Home = () => {
                 Rummikub
             </Title>
             <ButtonContainer>
-                <RoomFindButton type="button" value="방 생성" />
-                <RoomCreateButton type="button" value="방 참가" />
-                <Form>
+                {/* <RoomFindButton type="button" value="방 생성" /> */}
+                <Link to="/room">
+                    <RoomCreateButton type="button" value="방 참가" onClick={RoomFindOnClick} />
+                </Link>
+                {/* <Form>
                     <CodeInput type="text" placeholder="코드입력"/>
                     <CodeButton type="submit" value="참가"/>
-                </Form>
+                </Form> */}
             </ButtonContainer>
         </Container>
     );

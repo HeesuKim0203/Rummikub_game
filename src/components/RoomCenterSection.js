@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react' ;
+import React, { useEffect, useRef, useState } from 'react' ;
 import styled from 'styled-components' ;
 import { connect } from 'react-redux' ;
 
 import Tail from './Tail' ;
 import SelectTail from './SelectTail' ;
 import Timer from './Timer' ;
+import AuthorTailSection from './AuthorTailSection' ;
 
 // tile이 만나는 zone
 const Container = styled.div`
@@ -16,7 +17,7 @@ const Container = styled.div`
 
 const GameZone = styled.div`
     width : 100% ;
-    height : 77% ;
+    height : 75% ;
 
     border-bottom : 1px solid #111 ;
 
@@ -42,17 +43,34 @@ const TailZoneStairs = styled.div`
     }
 `;
 
-const RoomCenterSection = ({ tailData, selectTail }) => {
-    const [ tailSection, setTailSection ] = useState([]) ;
+const RoomCenterSection = ({ tailData, tailSection }) => {
+    // const [ tailSection, setTailSection ] = useState([]) ;
+    const ContainerElement = useRef() ;
+
+    const [ContainerX, setContainerX ] = useState(0) ;
+    const [ContainerY, setContainerY ] = useState(0) ;
+
+    useEffect(() => {
+        const { x, y } =  ContainerElement.current.getBoundingClientRect() ;
+
+        setContainerX(x) ;
+        setContainerY(y) ;
+
+    }, []) ;
+
+    // console.log(tailData) ;
 
     return (
-        <Container>
+        <Container ref={ContainerElement}>
             <Timer/>
             <SelectTail />
             <GameZone>
-                {tailSection && tailSection.map(() => {
-                    
-                })}
+                {tailSection && tailSection.map((tails, index) => (
+                    <AuthorTailSection 
+                        key={index}
+                        tails={tails} 
+                    />
+                ))}
             </GameZone>
             <TailZone>
                 <TailZoneStairs>
@@ -62,9 +80,9 @@ const RoomCenterSection = ({ tailData, selectTail }) => {
                             id={index} 
                             color={tail.color}
                             num={tail.num}
-                            x={tail.x}
-                            y={tail.y}
                             tail={tail}
+                            ContainerX={ContainerX}
+                            ContainerY={ContainerY}
                         />
                     )}
                 </TailZoneStairs>
@@ -77,13 +95,13 @@ const RoomCenterSection = ({ tailData, selectTail }) => {
 } ;
 
 function mapStateToProps(state) {
-    const { tailData, selectTail } = state ;
+    const { tailData, tailSection } = state ;
 
     // tailData 개수가 첫번째 Tail 존을 초과했을때 알고리즘
 
     return {
         tailData,
-        selectTail
+        tailSection
     } ;
 }
 

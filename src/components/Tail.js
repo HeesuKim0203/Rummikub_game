@@ -7,7 +7,13 @@ import { faMeh } from '@fortawesome/free-solid-svg-icons' ;
 import { connect } from 'react-redux' ;
 import { createAction } from '../store';
 
-import { TAIL_WIDTH, TAIL_HEIGHT } from './util' ;
+import { 
+    TAIL_WIDTH, 
+    TAIL_HEIGHT, 
+    CENTER_CONTAINER_WITDH,
+    CENTER_CONTAINER_HEIGHT,
+    WALL_COLLISION
+ } from './util' ;
 
 const Container = styled.div.attrs(props => ({
     style : {
@@ -52,7 +58,7 @@ const Text = styled.span`
     color : ${props => props.color} ;
 `;
 
-const Tail = ({ color, num, tail, selectTail, addTail, deleteTail }) => {
+const Tail = ({ ContainerX, ContainerY, color, num, tail, selectTail, addTail, deleteTail }) => {
 
     const selectState = tail && selectTail.some(select_tail => select_tail.id === tail.id) ;
 
@@ -88,26 +94,27 @@ const Tail = ({ color, num, tail, selectTail, addTail, deleteTail }) => {
         let left = Number(e.pageX) - initialX ; 
         let top = Number(e.pageY) - initialY ; 
 
+        if(left  < ContainerX ) {
+            left = ContainerX + WALL_COLLISION ;
+            eventOut() ;
+        }
+        //937.5
+        if(left > ContainerX + CENTER_CONTAINER_WITDH - TAIL_WIDTH) {
+            left = ContainerX + CENTER_CONTAINER_WITDH - TAIL_WIDTH - WALL_COLLISION ;
+            eventOut() ;
+        }
+        if(top < ContainerY) {
+            top = ContainerY + WALL_COLLISION ;
+            eventOut() ;
+        }
+        if(top > CENTER_CONTAINER_HEIGHT - TAIL_HEIGHT) {
+            top = CENTER_CONTAINER_HEIGHT - TAIL_HEIGHT - WALL_COLLISION ;
+            eventOut() ;
+        }
+
         setX(left) ;
         setY(top) ;
         setSelect(true) ;
-
-        if(left < 165) {
-            left = left + 15 ;
-            eventOut() ;
-        }
-        if(left > 1102.5 - TAIL_WIDTH) {
-            left = left - 15 ;
-            eventOut() ;
-        }
-        if(top < 0) {
-            top = top + 15 ;
-            eventOut() ;
-        }
-        if(top > 575 - TAIL_HEIGHT) {
-            top = top - 15 ;
-            eventOut() ;
-        }
     }
     // event 해제
     function eventOut(e) {

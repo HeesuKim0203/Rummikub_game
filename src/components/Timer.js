@@ -9,15 +9,18 @@ import { createAction } from '../store' ;
 
 const Container = styled.div`
     width : 100% ;
-    height : 3% ;
+    height : 5% ;
 
     display : flex ;
 
-    margin-top : 5px ;
+    margin-bottom : 5px ;
 `;
 
 const TimeContainer = styled.div`
     width : 100% ;
+    height : 80% ;
+
+    margin : auto 0 ;
     
     display : flex ;
     justify-content : center ;
@@ -94,7 +97,7 @@ const Timer = ({ reducerTime, timeUpdate,  }) => {
                 <Time>
                     <TimeCount time={time}/>
                 </Time>
-            <TimeText>{time} 초</TimeText>
+                <TimeText>{time} 초</TimeText>
             </TimeContainer>
         </Container>
     );

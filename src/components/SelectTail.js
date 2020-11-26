@@ -23,13 +23,27 @@ const Title = styled.h4`
     text-align : center ;
 `;
 
+const SelectTailContainer = styled.div`
+    display : flex ;
+    flex-direction : row ;
+    
+    border-radius : 5px ; 
+`;
+
 const SelectTail = ({ selectTail }) => {
     return (
         <Container>
             <Title>Select Tail</Title>
-            <TailContainer 
-                tailArray={selectTail}
-            />
+            <SelectTailContainer>
+                {selectTail && selectTail.map((tail, index) =>
+                    <Tail 
+                        key={index} 
+                        id={index} 
+                        color={tail.color}
+                        num={tail.num}
+                    />
+                )}
+            </SelectTailContainer>
         </Container>
     );
 };

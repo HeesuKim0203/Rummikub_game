@@ -116,7 +116,7 @@ const ascTail = () => {
     }
 }
 
-const reducer = ( state = { tailData :  tailData.slice(0, 14), selectTail : [], tailSection : [], time : 0 }, action ) => {
+const reducer = ( state = { tailData :  tailData.slice(0, 14), selectTail : [], tailSection : [ [ ...tailData.slice(14, 17) ] ], time : 0 }, action ) => {
     switch(action.type) {
         case ADD_TAILSECTION :
 
