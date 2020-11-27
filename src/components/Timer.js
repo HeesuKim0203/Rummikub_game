@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react' ;
+import React, { useState, useRef, useEffect } from 'react' ;
 import styled from 'styled-components' ;
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
@@ -35,7 +35,7 @@ const Time = styled.div`
 `;
 
 const TimeCount = styled.div`
-    width : ${props => `${100 - (100 / 30) * props.time}%`} ;
+    width : ${props => `${100 - (100 / 30) * (30 - props.time)}%`} ;
     height : 100% ;
     
     background-color : #e53935 ;
@@ -53,39 +53,33 @@ const TimeText = styled.span`
     text-align : center ;
 `;
 
-const Timer = ({ reducerTime, timeUpdate,  }) => {
+const Timer = ({ reducerTime, timeUpdate  }) => {
 
-    // const arr = new Array() ;   
-    
-    // for(let i = 0 ; i < 30 ; i++) {
-    //     arr[i] = 0 ;
-    // } 
-
-    const [ time, setTime ] = useState(0) ;
+    const [ time, setTime ] = useState(reducerTime) ;
     const callBack = useRef() ;
     let clearTime ;
 
     callBack.current = () => {
-        setTime(time + 1) ;
-        timeUpdate(reducerTime + 1) ;
+        setTime(time - 1) ;
+        timeUpdate(reducerTime - 1) ;
     } ;
     
-    // useEffect(() => {
-    //     clearTime = setInterval(tick, 1000) ;
-    //     function tick() {
-    //         callBack.current() ;
-    //     }
+    useEffect(() => {
+        clearTime = setInterval(tick, 1000) ;
+        function tick() {
+            callBack.current() ;
+        }
 
-    // }, []) ;
+    }, []) ;
 
-    // useEffect(() => {
-    //     if(time === 30) {
-    //         console.log('턴 종료') ;
-    //         setTime(0) ;
-    //         clearInterval(clearTime) ;
-    //     }
+    useEffect(() => {
+        if(time === 0) {
+            console.log('턴 종료') ;
+            setTime(30) ;
+            clearInterval(clearTime) ;
+        }
 
-    // }, [reducerTime]) ;
+    }, [reducerTime]) ;
 
     return (
         <Container>

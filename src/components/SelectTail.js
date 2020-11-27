@@ -1,11 +1,9 @@
-import React, { useState } from 'react' ;
+import React from 'react' ;
 import styled from 'styled-components' ;
 
 import { connect } from 'react-redux' ;
-import { createAction } from '../store' ;
 
 import Tail from './Tail' ;
-import TailContainer from './TailContainer' ;
 import { TAIL_WIDTH } from './util' ;
 
 const Container = styled.div`
@@ -54,13 +52,5 @@ function mapStateToProps(state) {
         selectTail
     } ;
 }
-
-// function mapDispatchToProps(dispatch) {
-//     return {
-//         addTail : tail => {
-//             dispatch( createAction.addTailSection(tail)) ;
-//         }
-//     }
-// }
 
 export default connect(mapStateToProps)(SelectTail) ;

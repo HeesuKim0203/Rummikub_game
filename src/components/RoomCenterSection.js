@@ -47,6 +47,8 @@ const RoomCenterSection = ({ tailData, tailSection }) => {
     // const [ tailSection, setTailSection ] = useState([]) ;
     const ContainerElement = useRef() ;
 
+    console.log(tailSection) ;
+
     const [ContainerX, setContainerX ] = useState(0) ;
     const [ContainerY, setContainerY ] = useState(0) ;
 
@@ -68,6 +70,7 @@ const RoomCenterSection = ({ tailData, tailSection }) => {
                 {tailSection && tailSection.map((tails, index) => (
                     <AuthorTailSection 
                         key={index}
+                        id={index}
                         tails={tails} 
                     />
                 ))}
@@ -101,7 +104,7 @@ function mapStateToProps(state) {
 
     return {
         tailData,
-        tailSection
+        tailSection : tailSection.map(tails => tails.data)
     } ;
 }
 

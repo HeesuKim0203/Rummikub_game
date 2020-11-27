@@ -70,12 +70,20 @@ for(let i = 0 ; i < tailData.length * 5 ; i++) {
 }
 
 const ADD_TAILSECTION = 'ADD_TAILSECTION' ;
+const TAILSECTION_SET = 'TAILSECTION_SETX' ;
+// const TAILSECTION_DELETE = 
+const TAILSECTION_TAIL_ADD = 'TAILSECTION_TAIL_ADD' ;
+
 const ADD_TAIL = 'ADD_TAIL' ;
 const DELETE_TAIL = 'DELETE_TAIL' ;
+
 const RESET_POSITION = 'RESET_POSITION' ;
 const ASC_TAIL = 'ASC_TAIL' ;
+
 const TIME_UPDATE = 'TIME_UPDATE' ;
 
+const SELECT_TAIL_DATA_MAINTAIN = 'SELECT_TAIL_DATA_MAINTAIN' ; 
+const SELECT_TAIL_DATA_DELETE = 'SELECT_TAIL_DATA_DELETE' ; 
 
 const timeUpdate = time => ({
     type : TIME_UPDATE,
@@ -116,10 +124,41 @@ const ascTail = () => {
     }
 }
 
-const reducer = ( state = { tailData :  tailData.slice(0, 14), selectTail : [], tailSection : [ [ ...tailData.slice(14, 17) ] ], time : 0 }, action ) => {
+const setSelectTail = tail => {
+    return {
+        type : SELECT_TAIL_DATA_MAINTAIN,
+        tail
+    }
+}
+
+const setSelectTailEmpty = () => {
+    return {
+        type : SELECT_TAIL_DATA_DELETE
+    }
+}
+
+const tailSectionSetX = (id, x, y, width) => {
+    return {
+        type : TAILSECTION_SET,
+        id,
+        x,
+        y,
+        width
+    }
+}
+
+const tailSectionAdd = (id, tail) => {
+    return {
+        type : TAILSECTION_TAIL_ADD,
+        id,
+        tail
+    }
+}
+
+const reducer = ( state = { tailData :  tailData.slice(0, 14), selectTail : [], tailSection : [ { x : 0, y : 0, width : 0, data : [ ...tailData.slice(14, 17) ] } ], time : 30, tail : null }, action ) => {
     switch(action.type) {
         case ADD_TAILSECTION :
-
+                      
             return ;
         case ADD_TAIL :
             const addSelectTail = state.selectTail
@@ -138,12 +177,12 @@ const reducer = ( state = { tailData :  tailData.slice(0, 14), selectTail : [], 
             return {
                ...state,
                selectTail : newSelectState,
-            }
+            } ;
         case RESET_POSITION :
             return {
                 ...state,
                 selectTail : [],
-            }
+            } ;
         case ASC_TAIL :
             const tailDataState = state.tailData
                 .sort((a, b) => a.num - b.num) ;
@@ -151,18 +190,59 @@ const reducer = ( state = { tailData :  tailData.slice(0, 14), selectTail : [], 
                 ...state,
                 tailData : [ ...tailDataState ]
             } ;
-        // case COLOR_TAIL : 
-        //     const tailDataState = state.tailData
-        //         .sort((a, b) => a.num - b.num) ;
-        //     return {
-                
-        //     } ;
         case TIME_UPDATE :
             const update_time = action.time ;
             return {
                 ...state,
                 time : update_time
             } ; 
+        case SELECT_TAIL_DATA_MAINTAIN :
+            const selectTail = action.tail ; 
+            return {
+                ...state,
+                tail : selectTail
+            } ;
+        case SELECT_TAIL_DATA_DELETE :
+            return {
+                ...state,
+                tail : null
+            } ;
+        case TAILSECTION_SET :
+            const findSection = state.tailSection[action.id] ;
+            const newSection = {
+                ...findSection,
+                x : action.x,
+                y : action.y,
+                width : action.width
+            } ;
+            return {
+                ...state,
+                tailSection : [
+                    ...state.tailSection.slice(0, action.id),
+                    newSection,
+                    ...state.tailSection.slice(action.id + 1, state.tailSection.length)
+                ]
+            }
+        case TAILSECTION_TAIL_ADD :
+            const findSectionAdd = state.tailSection[action.id] ;
+            const tailObj = action.tail ;
+            const removeSelectTailId2 = state.tailData.findIndex(tail => tail.id === action.tail.id) ;
+            const newSectionAdd = {
+                ...findSectionAdd,
+                data : [ ...findSectionAdd.data, tailObj ]
+            } ;
+            return {
+                ...state,
+                tailData : [
+                    ...state.tailData.slice(0, removeSelectTailId2),
+                    ...state.tailData.slice(removeSelectTailId2 + 1, state.tailData.length), 
+                ],
+                tailSection : [
+                    ...state.tailSection.slice(0, action.id),
+                    newSectionAdd,
+                    ...state.tailSection.slice(action.id + 1, state.tailSection.length)
+                ]
+            }
         default :
             return state ;
     }
@@ -176,7 +256,11 @@ export const createAction = {
     addTailSection,
     resetPosition,
     ascTail,
-    timeUpdate
+    timeUpdate,
+    setSelectTail,
+    setSelectTailEmpty,
+    tailSectionSetX,
+    tailSectionAdd
 } ;
 
 export default store ;

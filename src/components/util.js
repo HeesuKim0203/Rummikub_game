@@ -12,3 +12,5 @@ export const TAIL_HEIGHT = 60 ;
 
 // 충돌 값
 export const WALL_COLLISION = 30 ;
+
+export const TAIL_SECITON_HEIGHT = 60 ;

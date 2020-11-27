@@ -22,6 +22,7 @@ const GlobalStyled = createGlobalStyle`
         padding : 0 ;
         margin : 0 ;
         box-sizing : border-box ;
+        user-select : none ;
     }
     a {
         text-decoration : none ;

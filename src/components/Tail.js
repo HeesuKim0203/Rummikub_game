@@ -12,7 +12,8 @@ import {
     TAIL_HEIGHT, 
     CENTER_CONTAINER_WITDH,
     CENTER_CONTAINER_HEIGHT,
-    WALL_COLLISION
+    WALL_COLLISION,
+    TAIL_SECITON_HEIGHT
  } from './util' ;
 
 const Container = styled.div.attrs(props => ({
@@ -58,7 +59,10 @@ const Text = styled.span`
     color : ${props => props.color} ;
 `;
 
-const Tail = ({ ContainerX, ContainerY, color, num, tail, selectTail, addTail, deleteTail }) => {
+const Tail = ({ 
+    ContainerX, 
+    ContainerY, 
+    color, num, tail, selectTail, addTail, deleteTail, setSelectTail, setSelectTailEmpty, tailSectionWallData, tailSectionAdd, resetPosition }) => {
 
     const selectState = tail && selectTail.some(select_tail => select_tail.id === tail.id) ;
 
@@ -87,10 +91,12 @@ const Tail = ({ ContainerX, ContainerY, color, num, tail, selectTail, addTail, d
         setInitialX(e.nativeEvent.offsetX) ;
         setInitialY(e.nativeEvent.offsetY) ;
 
-        selectTailNum < 3 || select ?  setDownState(true) : setDownState(false)   ;
+        selectTailNum < 3 || select ?  setDownState(true) : setDownState(false) ;
+        setSelectTail(tail) ;
     }
 
     function onMouseMove(e) {
+
         let left = Number(e.pageX) - initialX ; 
         let top = Number(e.pageY) - initialY ; 
 
@@ -111,15 +117,26 @@ const Tail = ({ ContainerX, ContainerY, color, num, tail, selectTail, addTail, d
             top = CENTER_CONTAINER_HEIGHT - TAIL_HEIGHT - WALL_COLLISION ;
             eventOut() ;
         }
+        
 
         setX(left) ;
         setY(top) ;
         setSelect(true) ;
+
     }
     // event 해제
     function eventOut(e) {
         const overlappingCheckValue = selectTail.some(tailValue => tailValue.id === tail.id) ;
         const selectStandard = 458 - TAIL_HEIGHT / 2
+
+        tailSectionWallData.forEach((sectionWallData, index) => {
+            if(x > sectionWallData.x && x < sectionWallData.x + sectionWallData.width) {
+                if(y > sectionWallData.y && y < sectionWallData.y + TAIL_SECITON_HEIGHT) {
+                    tailSectionAdd(index, tail) ;
+                    setSelect(false) ;
+                }
+            }
+        }) ;
 
         if(y !== 0) {
             if(y <= selectStandard) {
@@ -133,6 +150,7 @@ const Tail = ({ ContainerX, ContainerY, color, num, tail, selectTail, addTail, d
                     deleteTail(tail.id) ;
             }
         }
+        setSelectTailEmpty() ;
         setDownState(false) ;
     }
     function eventInit(downState, event, ...parms) {
@@ -149,6 +167,7 @@ const Tail = ({ ContainerX, ContainerY, color, num, tail, selectTail, addTail, d
             position={select ? 'absolute' : 'static' }
             x={select ? `${x}px` : '0'}
             y={select ? `${y}px` : '0'}
+            draggable="false"
         >
             <TextContainer>
                 <Text color={color}>
@@ -166,9 +185,10 @@ const Tail = ({ ContainerX, ContainerY, color, num, tail, selectTail, addTail, d
 } ;
 
 function mapStateToProps(state) {
-    const { selectTail } = state ;
+    const { selectTail, tailSection  } = state ;
     return {
-        selectTail
+        selectTail,
+        tailSectionWallData : tailSection.map(tails => ({ x : tails.x, y : tails.y, width : tails.width }))
     } ;
 }
 
@@ -180,6 +200,14 @@ function mapDispatchToProps(dispatch) {
         deleteTail : id => {
             dispatch(createAction.deleteTail(id)) ;
         },
+        setSelectTail : tail => 
+            dispatch(createAction.setSelectTail(tail)),
+        setSelectTailEmpty : () => 
+            dispatch(createAction.setSelectTailEmpty()),
+        tailSectionAdd : (id, tail) =>
+            dispatch(createAction.tailSectionAdd(id, tail)),
+        resetPosition : () => 
+            dispatch(createAction.resetPosition()),
     }
 }
 

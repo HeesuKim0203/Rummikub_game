@@ -6,8 +6,6 @@ import Tail from './Tail' ;
 const Container = styled.div`
     display : flex ;
     flex-direction : row ;
-    
-    border-radius : 5px ; 
 `;
 
 const TailContainer = ({ tailArray }) => {
