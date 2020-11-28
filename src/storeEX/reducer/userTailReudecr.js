@@ -4,93 +4,56 @@ import {
     TAIL_ADD,
     TAIL_DELETE,
     RESET_POSITION,
-    ASC_TAIL 
+    ASC_TAIL,
+    SET_TAIL_SECTION,
+    TAIL_SECTION_TAIL_ADD
 } from '../type' ;
 
 import tailReducer from './tailReudecr' ;
 
-const CARD_NUM = 13, COLOR_NUM = 4 ;
-const DARK_BLUE = '#283593',
-        DARK_RED = '#d32f2f',
-        DARK_ORANGE = '#f57f17',
-        DARK_GRAY = '#263238' ;
+import tailData from '../../assets/tailData' ;
 
-const tailData = [] ;
-const color = [ DARK_BLUE, DARK_RED, DARK_ORANGE, DARK_GRAY ] ;
+// 같은 숫자 다른 색깔 3개
+// 같은 색깔 숫자 1씩 증가 3개
 
-let count = 0 ;
+// 첫턴은 합이 30 이상이여야 한다.
 
-for(let i = 0 ; i < COLOR_NUM ; i++) {
-    for(let z = 0 ; z < 2 ; z++) {
-        for(let j = 0 ; j < CARD_NUM ; j++) {
-            tailData.push({ color :  color[i] }) ;
-            tailData[count].num = j + 1 ;
-            tailData[count].x = 0 ;
-            tailData[count].y = 0 ;
-            tailData[count].select = false ;
-            tailData[count].id = count++ ;
-        }
+function checkTail(turn, tailList) {
+    let sum = 0 ;
+    let colorCount = 0 ;
+    let numCount = 0 ;
+    let checkData = [] ;
+    switch(turn) { 
+        case 'first turn' :
+            tailList.forEach(tail => {
+                sum += tail.num ;
+            }) ;
+            if (sum < 30) return ;
+        case 'same num' :
+            tailList.forEach(tail => {
+                checkData.push(tail) ;
+            }) ;
+            return ;
+        case 'same color' :
+            return ;
+        default : 
+        return ;
     }
-}
-
-tailData.push({
-    color : DARK_GRAY,
-    num : -1,
-    x : 0,
-    y : 0,
-    select : false,
-    id : count++
-}) ;
-tailData.push({
-    color : DARK_RED,
-    num : -1,
-    x : 0,
-    y : 0,
-    select : false,
-    id : count++
-}) ;
-
-function checkObj(obj) {
-    if(obj === null || typeof obj !== 'object')
-        return true ;
-
-    return false ;
-}
-
-// 객체 깊은 복사
-function deepClone(obj) {
-
-    if(checkObj(obj))
-        return obj ;
- 
-    const result = Array.isArray(obj) ? [] : {} ;
-
-    for(let key of Object.keys(obj)) {
-        // eslint-disable-next-line no-unused-vars
-        result[key] = checkObj(obj[key]) ? obj[key] : false ;
-    }
-
-    return result ;
-}
-
-count = 0 ;
-
-// 섞기 
-for(let i = 0 ; i < tailData.length * 5 ; i++) {
-
-    const random = Math.floor(Math.random() * 106) ;
-
-    const temp = deepClone(tailData[random]) ;
-    tailData[random] = deepClone(tailData[count]) ;
-    tailData[count++] = deepClone(temp) ;
-
-    count = (count === 106) ? 0 : count ;
 }
 
 const userTailReducer = (
     state = { 
         userTail : [ ...tailData.slice(0, 14) ],
         selectTail : [],
+        moveTail : [],
+        tailSection : [ 
+            { 
+                x : 0, 
+                y : 0, 
+                width : 0, 
+                data : [ ...tailData.slice(14, 17) ] 
+            } 
+        ],
     },
     action
 ) => {
@@ -103,6 +66,7 @@ const userTailReducer = (
     switch(action.type) {
         case TAIL_IN :
             return {
+                ...state,
                 userTail : tailReducer(state.userTail, {
                     type : TAIL_ADD,
                     tail : newTail
@@ -114,6 +78,7 @@ const userTailReducer = (
             }
         case TAIL_OUT :
             return {
+                ...state,
                 userTail : tailReducer(state.userTail, {
                     type : TAIL_DELETE,
                     tailId : action.tail.id
@@ -125,6 +90,7 @@ const userTailReducer = (
             }
         case RESET_POSITION :
             return {
+                ...state,
                 selectTail : [],
                 userTail : [ 
                     ...state.userTail, 
@@ -140,6 +106,36 @@ const userTailReducer = (
             return state.selectTail.length !== 0 ? state : {
                 ...state,
                 userTail : [ ...state.userTail.sort((a, b) => a.num - b.num) ]
+            }
+        case SET_TAIL_SECTION :
+            const findSection = state.tailSection[action.id] ;
+            const newSection = {
+                ...findSection,
+                x : action.x,
+                y : action.y,
+                width : action.width
+            } ;
+            return {
+                ...state,
+                tailSection : [
+                    ...state.tailSection.slice(0, action.id),
+                    newSection,
+                    ...state.tailSection.slice(action.id + 1, state.tailSection.length)
+                ]
+            }
+        case TAIL_SECTION_TAIL_ADD :
+            const findSectionAdd = state.tailSection[action.id] ;
+            const newSectionAdd = {
+                ...findSectionAdd,
+                data : [ ...findSectionAdd.data, action.tail ]
+            } ;
+            return {
+                ...state,
+                tailSection : [
+                    ...state.tailSection.slice(0, action.id),
+                    newSectionAdd,
+                    ...state.tailSection.slice(action.id + 1, state.tailSection.length)
+                ]
             }
         default :
             return state ;

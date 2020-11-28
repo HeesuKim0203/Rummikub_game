@@ -3,7 +3,9 @@ import {
     TAIL_OUT,
     RESET_POSITION,
     ASC_TAIL,
-    TIME_UPDATE
+    TIME_UPDATE,
+    SET_TAIL_SECTION,
+    TAIL_SECTION_TAIL_ADD
 }  from './type' ;
 
 // tail 데이터 action
@@ -36,12 +38,31 @@ const timeUpdate = time => ({
     time
 }) ;
 
+const setTailSection = (id, x, y, width) => {
+    return {
+        type : SET_TAIL_SECTION,
+        id,
+        x,
+        y,
+        width
+    }
+}
+
+const tailSectionTailAdd = (id, tail) => {
+    return {
+        type : TAIL_SECTION_TAIL_ADD,
+        id,
+        tail
+    }
+}
 const createAction = {
     tailClick,
     tailClickOut,
     resetPosition,
     ascTail,
-    timeUpdate
+    timeUpdate,
+    setTailSection,
+    tailSectionTailAdd
 } ;
 
 export default createAction ;

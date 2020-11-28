@@ -52,8 +52,7 @@ const TailZoneStairs = styled.div`
     }
 `;
 
-const RoomCenterSection = ({ userTail, selectTail }) => {
-    // const [ tailSection, setTailSection ] = useState([]) ;
+const RoomCenterSection = ({ userTail, selectTail, tailSection }) => {
     const ContainerElement = useRef() ;
 
     const [ContainerX, setContainerX ] = useState(0) ;
@@ -67,8 +66,6 @@ const RoomCenterSection = ({ userTail, selectTail }) => {
 
     }, []) ;
 
-    // console.log(tailData) ;
-
     return (
         <Container ref={ContainerElement}>
             <TimerZone>
@@ -76,13 +73,13 @@ const RoomCenterSection = ({ userTail, selectTail }) => {
             </TimerZone>
             <SelectTail />
             <GameZone>
-                {/* {tailSection && tailSection.map((tails, index) => (
+                {tailSection && tailSection.map((tails, index) => (
                     <AuthorTailSection 
                         key={index}
                         id={index}
                         tails={tails} 
                     />
-                ))} */}
+                ))}
             </GameZone>
             <TailZone>
                 <TailZoneStairs>
@@ -112,14 +109,14 @@ const RoomCenterSection = ({ userTail, selectTail }) => {
 } ;
 
 function mapStateToProps(state) {
-    console.log(state) ;
    const { 
-       tail : { userTail, selectTail } 
+       tail : { userTail, tailSection, selectTail } 
     } = state ;
 
     return {
         userTail,
-        selectTail
+        selectTail,
+        tailSection : tailSection.map(tails => tails.data)
     } ;
 }
 

@@ -76,7 +76,6 @@ for(let i = 0 ; i < tailData.length * 5 ; i++) {
 
 const ADD_TAILSECTION = 'ADD_TAILSECTION' ;
 const TAILSECTION_SET = 'TAILSECTION_SETX' ;
-// const TAILSECTION_DELETE = 
 const TAILSECTION_TAIL_ADD = 'TAILSECTION_TAIL_ADD' ;
 
 const ADD_TAIL = 'ADD_TAIL' ;

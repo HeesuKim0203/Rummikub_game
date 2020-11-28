@@ -12,6 +12,7 @@ import {
     WALL_COLLISION,
     TAIL_SECITON_HEIGHT
  } from './util' ;
+ 
 import { connect } from 'react-redux';
 import createAction from '../storeEX/action';
 
@@ -66,7 +67,9 @@ const Tail = ({
     selectTailNum,
     selectTail,
     tailClick,
-    tailClickOut
+    tailClickOut,
+    tailSectionTailAdd,
+    tailSectionWallData,
 }) => {
 
     const [ downState, setDownState ] = useState(false) ;
@@ -91,7 +94,7 @@ const Tail = ({
         setInitialX(e.nativeEvent.offsetX) ;
         setInitialY(e.nativeEvent.offsetY) ;
 
-        selectTailNum < 3 || select ?  setDownState(true) : setDownState(false) ;
+        // selectTailNum < 3 || select ?  setDownState(true) : setDownState(false) ;
         setDownState(true) ;
     }
 
@@ -129,20 +132,12 @@ const Tail = ({
         const overlappingCheckValue = selectTail.some(tailValue => tailValue.id === tail.id) ;
         const selectStandard = 458 - TAIL_HEIGHT / 2
 
-        // tailSectionWallData.forEach((sectionWallData, index) => {
-        //     if(x > sectionWallData.x && x < sectionWallData.x + sectionWallData.width) {
-        //         if(y > sectionWallData.y && y < sectionWallData.y + TAIL_SECITON_HEIGHT) {
-        //             tailSectionAdd(index, tail) ;
-        //             // setSelect(false) ;
-        //         }
-        //     }
-        // }) ;
-
         if(y !== 0) {
             if(y <= selectStandard) {
 
                 if(selectTailNum === 0 || !overlappingCheckValue)
                     tailClickOut(tail, x, y) ;
+
             }else {
                 setSelect(false) ;
 
@@ -150,6 +145,15 @@ const Tail = ({
                     tailClick(tail, x, y) ;
             }
         }
+
+        tailSectionWallData.forEach((sectionWallData, index) => {
+            if(x > sectionWallData.x && x < sectionWallData.x + sectionWallData.width) {
+                if(y > sectionWallData.y && y < sectionWallData.y + TAIL_SECITON_HEIGHT) {
+                    console.log('card check') ;
+                    // tailSectionTailAdd(index, tail) ;
+                }
+            }
+        }) ;
         setDownState(false) ;
     }
     function eventInit(downState, event, ...parms) {
@@ -203,15 +207,12 @@ const Tail = ({
 
 function mapStateToProps(state) {
     const { 
-        tail : { selectTail }  
+        tail : { selectTail, tailSection }  
     } = state ;
-    // return {
-    //     selectTail,
-    //     tailSectionWallData : tailSection.map(tails => ({ x : tails.x, y : tails.y, width : tails.width }))
-    // } ;
     return {
         selectTailNum : selectTail.length,
-        selectTail
+        selectTail,
+        tailSectionWallData : tailSection.map(tails => ({ x : tails.x, y : tails.y, width : tails.width }))
     }
 }
 
@@ -220,7 +221,9 @@ function mapDispatchToProps(dispatch) {
         tailClick : (tail, x, y) =>
             dispatch(createAction.tailClick(tail, x, y)),
         tailClickOut : (tail, x, y) => 
-            dispatch(createAction.tailClickOut(tail, x, y))
+            dispatch(createAction.tailClickOut(tail, x, y)),
+        tailSectionTailAdd : (id, tail) => 
+            dispatch(createAction.tailSectionTailAdd(id, tail))
     }
 }
 

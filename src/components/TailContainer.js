@@ -11,12 +11,12 @@ const Container = styled.div`
 const TailContainer = ({ tailArray }) => {
     return (
         <Container>
-             {tailArray && tailArray.map((tail, index) =>
+             {tailArray && tailArray.map((tail, index) => 
                 <Tail 
                     key={index} 
                     id={index} 
-                    color={tail.color}
-                    num={tail.num}
+                    tail={tail}
+                    fixed={false}
                 />
             )}
         </Container>

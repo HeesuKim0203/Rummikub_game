@@ -11,5 +11,12 @@ export const RESET_POSITION = 'RESET_POSITION' ;
 export const ASC_TAIL = 'ASC_TAIL' ;
 
 // timer 액션
-
 export const TIME_UPDATE = 'TIME_UPDATE' ;
+
+// tailSeciton 액션
+export const SET_TAIL_SECTION = 'SET_TAIL_SECTION' ;
+export const TAIL_SECTION_TAIL_ADD = 'TAIL_SECTION_TAIL_ADD' ;
+
+// // select tail 액션
+// export const SELECT_TAIL = 'SELECT_TAIL' ;
+// export const SELECT_TAIL_OUT = 'SELECT_TAIL_OUT' ;

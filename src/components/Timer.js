@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
 import { faClock } from '@fortawesome/free-solid-svg-icons' ;
 
 import { connect } from 'react-redux' ;
-import { createAction } from '../store' ;
+import createAction from '../storeEX/action' ;
 
 import { LNITIAL_TIME } from './util' ;
 
