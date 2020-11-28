@@ -11,15 +11,6 @@ import { LNITIAL_TIME } from './util' ;
 
 const Container = styled.div`
     width : 100% ;
-    height : 5% ;
-
-    display : flex ;
-
-    margin-bottom : 5px ;
-`;
-
-const TimeContainer = styled.div`
-    width : 100% ;
     height : 80% ;
 
     margin : auto 0 ;
@@ -55,15 +46,13 @@ const TimeText = styled.span`
     text-align : center ;
 `;
 
-const Timer = ({ reducerTime, timeUpdate  }) => {
+const Timer = ({ time, timeUpdate  }) => {
 
-    const [ time, setTime ] = useState(reducerTime) ;
     const callBack = useRef() ;
     let clearTime ;
 
     callBack.current = () => {
-        setTime(time - 1) ;
-        timeUpdate(reducerTime - 1) ;
+        timeUpdate(time - 1) ;
     } ;
     
     // useEffect(() => {
@@ -71,30 +60,26 @@ const Timer = ({ reducerTime, timeUpdate  }) => {
     //     function tick() {
     //         callBack.current() ;
     //     }
-
     // }, []) ;
 
     // useEffect(() => {
     //     if(time === 0) {
     //         console.log('턴 종료') ;
-    //         setTime(LNITIAL_TIME) ;
+    //         timeUpdate(time + LNITIAL_TIME) ;
     //         clearInterval(clearTime) ;
     //     }
-
-    // }, [reducerTime]) ;
+    // }, [time]) ;
 
     return (
         <Container>
-            <TimeContainer>
-                <FontAwesomeIcon
-                    icon={faClock}
-                    size={"2x"}
-                />
-                <Time>
-                    <TimeCount time={time}/>
-                </Time>
-                <TimeText>{time} 초</TimeText>
-            </TimeContainer>
+            <FontAwesomeIcon
+                icon={faClock}
+                size={"2x"}
+            />
+            <Time>
+                <TimeCount time={time}/>
+            </Time>
+            <TimeText>{time} 초</TimeText>
         </Container>
     );
 };
@@ -102,7 +87,7 @@ const Timer = ({ reducerTime, timeUpdate  }) => {
 function mapStateToProps(state) {
     const { time } = state ;
     return {
-        reducerTime : time
+        time
     } ;
 }
 

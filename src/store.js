@@ -227,7 +227,7 @@ const reducer = ( state = { tailData :  tailData.slice(0, 14), selectTail : [], 
     }
 }
 
-const store = createStore(reducer, applyMiddleware(logger)) ;
+// const store = createStore(reducer, applyMiddleware(logger)) ;
 
 export const createAction = {
     addTail,
@@ -240,4 +240,4 @@ export const createAction = {
     tailSectionAdd
 } ;
 
-export default store ;
+// export default store ;

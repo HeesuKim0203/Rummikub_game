@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
 import { faDotCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons' ;
 
 import { connect } from 'react-redux' ;
-import { createAction } from '../store' ;
+import createAction from '../storeEX/action' ;
 
 // button 모음 zone
 const Container = styled.div`
@@ -69,20 +69,16 @@ const CodeText = styled.span`
 
 `;
 
-const RoomRightSection = ({ resetPosition, ascTail, selectTail }) => {
+const RoomRightSection = ({ resetPosition, ascTail }) => {
     const [ answerStatus, setAnswerStatus ] = useState(false) ;
 
-    const useTailEvent = selectTail.length ? false : true ;    
-
-    useState(() => {
-        setAnswerStatus(checkTails(useTailEvent)) ;
-    }, [ useTailEvent ]) ;
-
     function ascTailOnClick() {
+        console.log('오름차순') ;
         ascTail() ;
     }
 
     function resetPositionOnClick() {
+        console.log('포지션 초기화') ;
         resetPosition() ;
     }
 
@@ -109,9 +105,7 @@ const RoomRightSection = ({ resetPosition, ascTail, selectTail }) => {
                 </ButtonLi>
                 <ButtonLi>
                     <AlignmentButton
-                        onClick={() => {
-                            return useTailEvent ? ascTailOnClick() : null ;
-                        }}
+                        onClick={ascTailOnClick}
                     >
                         오름 차순
                     </AlignmentButton>
@@ -137,12 +131,6 @@ const RoomRightSection = ({ resetPosition, ascTail, selectTail }) => {
     );
 };
 
-function mapStateToProps(state) {
-    const { selectTail } = state ;
-    return {
-        selectTail
-    } ;
-}
 
 function mapDispatchToProps(dispatch) {
     return {
@@ -155,4 +143,4 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(RoomRightSection) ;
+export default connect(null, mapDispatchToProps)(RoomRightSection) ;

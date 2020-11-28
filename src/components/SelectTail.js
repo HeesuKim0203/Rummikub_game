@@ -35,10 +35,9 @@ const SelectTail = ({ selectTail }) => {
             <SelectTailContainer>
                 {selectTail && selectTail.map((tail, index) =>
                     <Tail 
-                        key={index} 
-                        id={index} 
-                        color={tail.color}
-                        num={tail.num}
+                        key={index}
+                        tail={tail}
+                        fixed={true}
                     />
                 )}
             </SelectTailContainer>
@@ -47,7 +46,10 @@ const SelectTail = ({ selectTail }) => {
 };
 
 function mapStateToProps(state) {
-    const { selectTail } = state ;
+    const { 
+        tail : { selectTail } 
+    } = state ;
+    
     return {
         selectTail
     } ;

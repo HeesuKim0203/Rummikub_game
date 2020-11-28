@@ -4,9 +4,6 @@ import styled from 'styled-components' ;
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
 import { faMeh } from '@fortawesome/free-solid-svg-icons' ;
 
-import { connect } from 'react-redux' ;
-import { createAction } from '../store';
-
 import { 
     TAIL_WIDTH, 
     TAIL_HEIGHT, 
@@ -15,6 +12,8 @@ import {
     WALL_COLLISION,
     TAIL_SECITON_HEIGHT
  } from './util' ;
+import { connect } from 'react-redux';
+import createAction from '../storeEX/action';
 
 const Container = styled.div.attrs(props => ({
     style : {
@@ -62,33 +61,27 @@ const Text = styled.span`
 const Tail = ({ 
     ContainerX, 
     ContainerY, 
-    color, 
-    num, 
     tail, 
-    selectTail, 
-    addTail, 
-    deleteTail, 
-    tailSectionWallData, 
-    tailSectionAdd }) => {
-
-    const selectState = tail && selectTail.some(select_tail => select_tail.id === tail.id) ;
+    fixed,
+    selectTailNum,
+    selectTail,
+    tailClick,
+    tailClickOut
+}) => {
 
     const [ downState, setDownState ] = useState(false) ;
     const [ initialX, setInitialX ] = useState(0) ;
     const [ initialY, setInitialY ] = useState(0) ;
-
-    // 상태 변환 용 y 좌표
     const [ x, setX ] = useState(0) ;
     const [ y, setY ] = useState(0) ;
-
-    const [ select, setSelect ] =  useState(selectState)  ;
+    const [ select, setSelect ] = useState(false) ;
 
     useEffect(() => {
-        setSelect(selectState) ;
-    }, [ selectState ]) ;
-
-    // select tail 개수
-    const selectTailNum = selectTail.length ;
+        const { x, y, select } = tail ;
+        setX(x) ;
+        setY(y) ;
+        setSelect(select) ;
+    }, [tail]) ;
 
     function onMouseDown(e) {
         e.stopPropagation() ;
@@ -99,6 +92,7 @@ const Tail = ({
         setInitialY(e.nativeEvent.offsetY) ;
 
         selectTailNum < 3 || select ?  setDownState(true) : setDownState(false) ;
+        setDownState(true) ;
     }
 
     function onMouseMove(e) {
@@ -135,25 +129,25 @@ const Tail = ({
         const overlappingCheckValue = selectTail.some(tailValue => tailValue.id === tail.id) ;
         const selectStandard = 458 - TAIL_HEIGHT / 2
 
-        tailSectionWallData.forEach((sectionWallData, index) => {
-            if(x > sectionWallData.x && x < sectionWallData.x + sectionWallData.width) {
-                if(y > sectionWallData.y && y < sectionWallData.y + TAIL_SECITON_HEIGHT) {
-                    tailSectionAdd(index, tail) ;
-                    setSelect(false) ;
-                }
-            }
-        }) ;
+        // tailSectionWallData.forEach((sectionWallData, index) => {
+        //     if(x > sectionWallData.x && x < sectionWallData.x + sectionWallData.width) {
+        //         if(y > sectionWallData.y && y < sectionWallData.y + TAIL_SECITON_HEIGHT) {
+        //             tailSectionAdd(index, tail) ;
+        //             // setSelect(false) ;
+        //         }
+        //     }
+        // }) ;
 
         if(y !== 0) {
             if(y <= selectStandard) {
 
                 if(selectTailNum === 0 || !overlappingCheckValue)
-                    addTail(tail) ;
+                    tailClickOut(tail, x, y) ;
             }else {
                 setSelect(false) ;
 
                 if(selectTailNum > 0 && overlappingCheckValue)
-                    deleteTail(tail.id) ;
+                    tailClick(tail, x, y) ;
             }
         }
         setDownState(false) ;
@@ -163,52 +157,70 @@ const Tail = ({
     }
 
     return (
-        <Container
-            onMouseDown={onMouseDown}
-            onMouseMove={eventInit(downState, onMouseMove)}
-            onMouseUp ={eventInit(downState, eventOut)}
-            onMouseLeave={eventInit(downState, eventOut)}
-            border={select ? '2px solid #ef5350' : '1px solid #f0f4c3'}
-            position={select ? 'absolute' : 'static' }
-            x={select ? `${x}px` : '0'}
-            y={select ? `${y}px` : '0'}
-            draggable="false"
-        >
-            <TextContainer>
-                <Text color={color}>
-                    {num !== -1 ? num : (
-                        <FontAwesomeIcon
-                            icon={faMeh} 
-                            color={color}
-                            size="2x"
-                        />
-                    )}
-                </Text>
-            </TextContainer>
-        </Container>
+        <>
+            { !fixed ? (
+                <Container
+                    onMouseDown={onMouseDown}
+                    onMouseMove={eventInit(downState, onMouseMove)}
+                    onMouseUp ={eventInit(downState, eventOut)}
+                    onMouseLeave={eventInit(downState, eventOut)}
+                    border={select ? '2px solid #ef5350' : '1px solid #f0f4c3'}
+                    position={select ? 'absolute' : 'static' }
+                    x={select ? `${x}px` : '0'}
+                    y={select ? `${y}px` : '0'}
+                    draggable="false"
+                >
+                    <TextContainer>
+                        <Text color={tail.color}>
+                            {tail.num !== -1 ? tail.num : (
+                                <FontAwesomeIcon
+                                    icon={faMeh} 
+                                    color={tail.color}
+                                    size="2x"
+                                />
+                            )}
+                        </Text>
+                    </TextContainer>
+                </Container>
+            ) : (
+                <Container>
+                    <TextContainer>
+                        <Text color={tail.color}>
+                            {tail.num !== -1 ? tail.num : (
+                                <FontAwesomeIcon
+                                    icon={faMeh} 
+                                    color={tail.color}
+                                    size="2x"
+                                />
+                            )}
+                        </Text>
+                    </TextContainer>
+                </Container>
+            )}
+        </>
     )
 } ;
 
 function mapStateToProps(state) {
-    const { selectTail, tailSection  } = state ;
+    const { 
+        tail : { selectTail }  
+    } = state ;
+    // return {
+    //     selectTail,
+    //     tailSectionWallData : tailSection.map(tails => ({ x : tails.x, y : tails.y, width : tails.width }))
+    // } ;
     return {
-        selectTail,
-        tailSectionWallData : tailSection.map(tails => ({ x : tails.x, y : tails.y, width : tails.width }))
-    } ;
+        selectTailNum : selectTail.length,
+        selectTail
+    }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        addTail : tail => {
-            dispatch(createAction.addTail(tail)) ;
-        },
-        deleteTail : id => {
-            dispatch(createAction.deleteTail(id)) ;
-        },
-        setSelectTail : tail => 
-            dispatch(createAction.setSelectTail(tail)),
-        tailSectionAdd : (id, tail) => 
-            dispatch(createAction.tailSectionAdd(id, tail))
+        tailClick : (tail, x, y) =>
+            dispatch(createAction.tailClick(tail, x, y)),
+        tailClickOut : (tail, x, y) => 
+            dispatch(createAction.tailClickOut(tail, x, y))
     }
 }
 
