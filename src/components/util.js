@@ -13,4 +13,8 @@ export const TAIL_HEIGHT = 60 ;
 // 충돌 값
 export const WALL_COLLISION = 30 ;
 
+// tail Section height
 export const TAIL_SECITON_HEIGHT = 60 ;
+
+// timer 기본값 
+export const LNITIAL_TIME = 30 ;

@@ -2,6 +2,8 @@ import { createStore, applyMiddleware } from 'redux' ;
 import logger from 'redux-logger' ;
 import { combineReducers } from 'redux' ;
 
+import { LNITIAL_TIME } from './components/util' ;
+
 const CARD_NUM = 13, COLOR_NUM = 4 ;
 const DARK_BLUE = '#283593',
         DARK_RED = '#d32f2f',
@@ -18,6 +20,9 @@ for(let i = 0 ; i < COLOR_NUM ; i++) {
         for(let j = 0 ; j < CARD_NUM ; j++) {
             tailData.push({ color :  color[i] }) ;
             tailData[count].num = j + 1 ;
+            tailData[count].x = 0 ;
+            tailData[count].y = 0 ;
+            tailData[count].select = false ;
             tailData[count].id = count++ ;
         }
     }
@@ -82,20 +87,15 @@ const ASC_TAIL = 'ASC_TAIL' ;
 
 const TIME_UPDATE = 'TIME_UPDATE' ;
 
-const SELECT_TAIL_DATA_MAINTAIN = 'SELECT_TAIL_DATA_MAINTAIN' ; 
-const SELECT_TAIL_DATA_DELETE = 'SELECT_TAIL_DATA_DELETE' ; 
-
 const timeUpdate = time => ({
     type : TIME_UPDATE,
     time
 }) ;
 
-const addTail = tail => {
-    return {
+const addTail = tail => ({
         type : ADD_TAIL,
         tail
-    }
-}
+})
 
 const deleteTail = id => {
     return {
@@ -124,18 +124,6 @@ const ascTail = () => {
     }
 }
 
-const setSelectTail = tail => {
-    return {
-        type : SELECT_TAIL_DATA_MAINTAIN,
-        tail
-    }
-}
-
-const setSelectTailEmpty = () => {
-    return {
-        type : SELECT_TAIL_DATA_DELETE
-    }
-}
 
 const tailSectionSetX = (id, x, y, width) => {
     return {
@@ -155,7 +143,7 @@ const tailSectionAdd = (id, tail) => {
     }
 }
 
-const reducer = ( state = { tailData :  tailData.slice(0, 14), selectTail : [], tailSection : [ { x : 0, y : 0, width : 0, data : [ ...tailData.slice(14, 17) ] } ], time : 30, tail : null }, action ) => {
+const reducer = ( state = { tailData :  tailData.slice(0, 14), selectTail : [], tailSection : [ { x : 0, y : 0, width : 0, data : [ ...tailData.slice(14, 17) ] } ], time : LNITIAL_TIME }, action ) => {
     switch(action.type) {
         case ADD_TAILSECTION :
                       
@@ -179,8 +167,10 @@ const reducer = ( state = { tailData :  tailData.slice(0, 14), selectTail : [], 
                selectTail : newSelectState,
             } ;
         case RESET_POSITION :
+            
             return {
                 ...state,
+                
                 selectTail : [],
             } ;
         case ASC_TAIL :
@@ -196,17 +186,6 @@ const reducer = ( state = { tailData :  tailData.slice(0, 14), selectTail : [], 
                 ...state,
                 time : update_time
             } ; 
-        case SELECT_TAIL_DATA_MAINTAIN :
-            const selectTail = action.tail ; 
-            return {
-                ...state,
-                tail : selectTail
-            } ;
-        case SELECT_TAIL_DATA_DELETE :
-            return {
-                ...state,
-                tail : null
-            } ;
         case TAILSECTION_SET :
             const findSection = state.tailSection[action.id] ;
             const newSection = {
@@ -257,8 +236,6 @@ export const createAction = {
     resetPosition,
     ascTail,
     timeUpdate,
-    setSelectTail,
-    setSelectTailEmpty,
     tailSectionSetX,
     tailSectionAdd
 } ;

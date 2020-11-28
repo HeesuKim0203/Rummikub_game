@@ -62,7 +62,14 @@ const Text = styled.span`
 const Tail = ({ 
     ContainerX, 
     ContainerY, 
-    color, num, tail, selectTail, addTail, deleteTail, setSelectTail, setSelectTailEmpty, tailSectionWallData, tailSectionAdd, resetPosition }) => {
+    color, 
+    num, 
+    tail, 
+    selectTail, 
+    addTail, 
+    deleteTail, 
+    tailSectionWallData, 
+    tailSectionAdd }) => {
 
     const selectState = tail && selectTail.some(select_tail => select_tail.id === tail.id) ;
 
@@ -92,7 +99,6 @@ const Tail = ({
         setInitialY(e.nativeEvent.offsetY) ;
 
         selectTailNum < 3 || select ?  setDownState(true) : setDownState(false) ;
-        setSelectTail(tail) ;
     }
 
     function onMouseMove(e) {
@@ -150,7 +156,6 @@ const Tail = ({
                     deleteTail(tail.id) ;
             }
         }
-        setSelectTailEmpty() ;
         setDownState(false) ;
     }
     function eventInit(downState, event, ...parms) {
@@ -202,12 +207,8 @@ function mapDispatchToProps(dispatch) {
         },
         setSelectTail : tail => 
             dispatch(createAction.setSelectTail(tail)),
-        setSelectTailEmpty : () => 
-            dispatch(createAction.setSelectTailEmpty()),
-        tailSectionAdd : (id, tail) =>
-            dispatch(createAction.tailSectionAdd(id, tail)),
-        resetPosition : () => 
-            dispatch(createAction.resetPosition()),
+        tailSectionAdd : (id, tail) => 
+            dispatch(createAction.tailSectionAdd(id, tail))
     }
 }
 

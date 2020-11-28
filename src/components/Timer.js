@@ -7,6 +7,8 @@ import { faClock } from '@fortawesome/free-solid-svg-icons' ;
 import { connect } from 'react-redux' ;
 import { createAction } from '../store' ;
 
+import { LNITIAL_TIME } from './util' ;
+
 const Container = styled.div`
     width : 100% ;
     height : 5% ;
@@ -64,22 +66,22 @@ const Timer = ({ reducerTime, timeUpdate  }) => {
         timeUpdate(reducerTime - 1) ;
     } ;
     
-    useEffect(() => {
-        clearTime = setInterval(tick, 1000) ;
-        function tick() {
-            callBack.current() ;
-        }
+    // useEffect(() => {
+    //     clearTime = setInterval(tick, 1000) ;
+    //     function tick() {
+    //         callBack.current() ;
+    //     }
 
-    }, []) ;
+    // }, []) ;
 
-    useEffect(() => {
-        if(time === 0) {
-            console.log('턴 종료') ;
-            setTime(30) ;
-            clearInterval(clearTime) ;
-        }
+    // useEffect(() => {
+    //     if(time === 0) {
+    //         console.log('턴 종료') ;
+    //         setTime(LNITIAL_TIME) ;
+    //         clearInterval(clearTime) ;
+    //     }
 
-    }, [reducerTime]) ;
+    // }, [reducerTime]) ;
 
     return (
         <Container>
