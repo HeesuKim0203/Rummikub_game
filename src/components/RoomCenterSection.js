@@ -52,7 +52,7 @@ const TailZoneStairs = styled.div`
     }
 `;
 
-const RoomCenterSection = ({ userTail, selectTail, tailSection }) => {
+const RoomCenterSection = ({ userTail, moveTail, tailSection }) => {
     const ContainerElement = useRef() ;
 
     const [ContainerX, setContainerX ] = useState(0) ;
@@ -91,7 +91,7 @@ const RoomCenterSection = ({ userTail, selectTail, tailSection }) => {
                             ContainerY={ContainerY}
                         />
                     )}
-                    {selectTail && selectTail.map((tail, index) =>
+                    {moveTail && moveTail.map((tail, index) =>
                         <Tail 
                             key={index}
                             tail={tail}
@@ -110,12 +110,12 @@ const RoomCenterSection = ({ userTail, selectTail, tailSection }) => {
 
 function mapStateToProps(state) {
    const { 
-       tail : { userTail, tailSection, selectTail } 
+       tail : { userTail, tailSection, moveTail, selectTail } 
     } = state ;
 
     return {
         userTail,
-        selectTail,
+        moveTail,
         tailSection : tailSection.map(tails => tails.data)
     } ;
 }

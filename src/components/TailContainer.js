@@ -16,7 +16,6 @@ const TailContainer = ({ tailArray }) => {
                     key={index} 
                     id={index} 
                     tail={tail}
-                    fixed={false}
                 />
             )}
         </Container>

@@ -5,6 +5,7 @@ import {
     ASC_TAIL,
     TIME_UPDATE,
     SET_TAIL_SECTION,
+    MOVE_TAIL,
     TAIL_SECTION_TAIL_ADD
 }  from './type' ;
 
@@ -38,23 +39,30 @@ const timeUpdate = time => ({
     time
 }) ;
 
-const setTailSection = (id, x, y, width) => {
-    return {
-        type : SET_TAIL_SECTION,
-        id,
-        x,
-        y,
-        width
-    }
-}
+const setTailSection = (id, x, y, width) => ({
+    type : SET_TAIL_SECTION,
+    id,
+    x,
+    y,
+    width
+}) ;
+ 
+const tailSectionTailAdd = (id, tail, select) => ({
+    type : TAIL_SECTION_TAIL_ADD,
+    id,
+    tail,
+    select
+}) ;
 
-const tailSectionTailAdd = (id, tail) => {
-    return {
-        type : TAIL_SECTION_TAIL_ADD,
-        id,
-        tail
-    }
-}
+const moveTailFun = (sectionId, tail, x, y, select) => ({
+    type : MOVE_TAIL,
+    id : sectionId,
+    tail,
+    x, 
+    y,
+    select
+}) ;
+
 const createAction = {
     tailClick,
     tailClickOut,
@@ -62,6 +70,7 @@ const createAction = {
     ascTail,
     timeUpdate,
     setTailSection,
+    moveTailFun,
     tailSectionTailAdd
 } ;
 

@@ -18,6 +18,7 @@ for(let i = 0 ; i < COLOR_NUM ; i++) {
             tailData[count].y = 0 ;
             tailData[count].select = false ;
             tailData[count].section = false ;
+            tailData[count].sectionNum = undefined ;
             tailData[count].id = count++ ;
         }
     }

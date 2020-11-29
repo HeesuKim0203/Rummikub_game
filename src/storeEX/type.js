@@ -2,6 +2,9 @@
 export const TAIL_IN = 'TAIL_IN' ;
 export const TAIL_OUT = 'TAIL_OUT' ;
 
+// move tail 추가
+export const MOVE_TAIL = 'MOVE_TAIL' ;
+
 // userTail 데이터 관리
 export const TAIL_ADD = 'USER_TAIL_ADD' ;
 export const TAIL_DELETE = 'USER_TAIL_DELETE' ;

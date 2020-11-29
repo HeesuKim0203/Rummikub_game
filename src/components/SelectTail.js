@@ -8,7 +8,7 @@ import { TAIL_WIDTH } from './util' ;
 
 const Container = styled.div`
 
-    width : ${`${TAIL_WIDTH * 3}px`} ;
+    width : ${`${TAIL_WIDTH * 3 + 10}px`} ;
 
     position : fixed ;
     

@@ -6,6 +6,7 @@ import {
     RESET_POSITION,
     ASC_TAIL,
     SET_TAIL_SECTION,
+    MOVE_TAIL,
     TAIL_SECTION_TAIL_ADD
 } from '../type' ;
 
@@ -13,53 +14,18 @@ import tailReducer from './tailReudecr' ;
 
 import tailData from '../../assets/tailData' ;
 
-// 같은 숫자 다른 색깔 3개
-// 같은 색깔 숫자 1씩 증가 3개
-
-// 첫턴은 합이 30 이상이여야 한다.
-
-function checkTail(turn, tailList) {
-    let sum = 0 ;
-    let sameColorCount = 0 ;
-    let oneNumCount = 0 ;
-    let sameNumCount = 0 ;
-    switch(turn) { 
-        case 'first turn' :
-            tailList.forEach(tail => {
-                sum += tail.num ;
-            }) ;
-            if (sum < 30) return false ;
-        case 'turn' :
-            for(let i = 0 ; i < tailList.length - 1 ; i++) {
-                if(tailList[i].num === tailList[i + 1].num)
-                    sameNumCount++ ;
-                if(tailList[i].num + 1 === tailList[i + 1].num)
-                    oneNumCount++ ;
-            }
-            if (sameNumCount !== 3) return false ;
-            if (oneNumCount !== 3) return false ;
-            for(let i = 0 ; i < tailList.length - 1 ; i++) {
-                if(tailList[i].color === tailList[i + 1].color)
-                    sameColorCount++ ;
-            }
-            console.log(`sameNumCount : ${sameNumCount} sameColorCount : ${sameColorCount} oneNumCount : ${oneNumCount}`)
-            if(sameNumCount === 3 && sameColorCount === 0) return true ;
-            if(oneNumCount === 3 && sameColorCount === 3) return true ;
-        default : 
-            return true ;
-    }
-}
-
 const userTailReducer = (
     state = { 
         userTail : [ ...tailData.slice(0, 14) ],
         selectTail : [],
+        moveTail : [],
         tailSection : [ 
             { 
                 x : 0, 
                 y : 0, 
                 width : 0, 
-                data : [ ...tailData.slice(14, 17) ] 
+                data : [ ...tailData.slice(14, 17) ],
+                section : false
             } 
         ],
         checkValue : false,
@@ -80,10 +46,10 @@ const userTailReducer = (
                     type : TAIL_ADD,
                     tail : newTail
                 }),
-                selectTail : tailReducer(state.selectTail, {
+                moveTail : tailReducer(state.moveTail, {
                     type : TAIL_DELETE,
                     tailId : action.tail.id
-                }),
+                })
             }
         case TAIL_OUT :
             return {
@@ -92,25 +58,31 @@ const userTailReducer = (
                     type : TAIL_DELETE,
                     tailId : action.tail.id
                 }),
-                selectTail : tailReducer(state.selectTail, {
+                moveTail : tailReducer(state.moveTail, {
                     type : TAIL_ADD,
                     tail : newTail
-                }),
-                checkValue : checkTail('turn', [...state.selectTail, newTail])
+                })
             }
         case RESET_POSITION :
+            const tailSectionPosition = [] ;
+            const moveTailInUserTail = [ ...state.moveTail.filter(tail => tail.sectionNum === undefined) ] ;
+            for(let i = 0 ; i < state.tailSection.length ; i++) {
+                const array =  [ ...state.tailSection[i].data.filter(tail => tail.sectionNum === i), ...state.moveTail.filter(tail => tail.sectionNum === i) ] ;
+                tailSectionPosition[i] = {
+                    ...state.tailSection[i],
+                    width : 135,
+                    data : [ ...array.map(tail => ({ ...tail, select : false, section : i })) ]
+                }
+            }
             return {
                 ...state,
                 selectTail : [],
+                moveTail : [],
                 userTail : [ 
                     ...state.userTail, 
-                    ...state.selectTail.map(tail => ({
-                        ...tail,
-                        x : 0,
-                        y : 0,
-                        select : false
-                    }))
-                ].sort((a, b) => a.num - b.num)
+                    ...moveTailInUserTail
+                ].sort((a, b) => a.num - b.num),
+                tailSection : tailSectionPosition
             }
         case ASC_TAIL :
             return state.selectTail.length !== 0 ? state : {
@@ -118,9 +90,10 @@ const userTailReducer = (
                 userTail : [ ...state.userTail.sort((a, b) => a.num - b.num) ]
             }
         case SET_TAIL_SECTION :
-            const findSection = state.tailSection[action.id] ;
+            const findSection = state.tailSection[ action.id ] ;
             const newSection = {
                 ...findSection,
+                data : [...findSection.data.map(tail => ({...tail, section : action.id, sectionNum : action.id,}))],
                 x : action.x,
                 y : action.y,
                 width : action.width
@@ -135,15 +108,47 @@ const userTailReducer = (
             }
         case TAIL_SECTION_TAIL_ADD :
             const findSectionAdd = state.tailSection[action.id] ;
+            const moveTailRemove = state.moveTail.findIndex(tail => tail.id === action.tail.id) ;
             const newSectionAdd = {
                 ...findSectionAdd,
-                data : [ ...findSectionAdd.data, action.tail ]
+                width : findSectionAdd.width + 45,
+                data : [ 
+                    ...findSectionAdd.data, 
+                        {
+                            ...action.tail, 
+                            select : false, 
+                            section : action.id, 
+                            sectionNum : false 
+                        } 
+                    ].sort((a, b) => a.num - b.num)
             } ;
             return {
                 ...state,
+                moveTail : [
+                    ...state.moveTail.slice(0, moveTailRemove),
+                    ...state.moveTail.slice(moveTailRemove + 1, state.moveTail.length) 
+                ],
                 tailSection : [
                     ...state.tailSection.slice(0, action.id),
                     newSectionAdd,
+                    ...state.tailSection.slice(action.id + 1, state.tailSection.length)
+                ]
+            }
+        case MOVE_TAIL :
+            const findSectionData = state.tailSection[action.id] ;
+            const removeTailId = findSectionData.data.findIndex(tail => tail.id === action.tail.id) ;
+            const findSectionDataRemove = [
+                ...findSectionData.data.slice(0, removeTailId),
+                ...findSectionData.data.slice(removeTailId + 1, findSectionData.data.length)
+            ].sort((a, b) => a.num - b.num) ;
+            return {
+                ...state,
+                moveTail : [
+                    ...state.moveTail, {...newTail, x : action.x, y : action.y, section : false}
+                ],
+                tailSection : [
+                    ...state.tailSection.slice(0, action.id),
+                    { ...findSectionData, width : findSectionData.width - 45, data : findSectionDataRemove },
                     ...state.tailSection.slice(action.id + 1, state.tailSection.length)
                 ]
             }
