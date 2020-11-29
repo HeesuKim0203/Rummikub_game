@@ -141,8 +141,8 @@ const Tail = ({
             }else {
                 setSelect(false) ;
 
-                if(selectTailNum > 0 && overlappingCheckValue)
-                    tailClick(tail, x, y) ;
+                // if(selectTailNum > 0 && overlappingCheckValue)
+                //     tailClick(tail, x, y) ;
             }
         }
 

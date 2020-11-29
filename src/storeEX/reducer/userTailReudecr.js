@@ -20,24 +20,33 @@ import tailData from '../../assets/tailData' ;
 
 function checkTail(turn, tailList) {
     let sum = 0 ;
-    let colorCount = 0 ;
-    let numCount = 0 ;
-    let checkData = [] ;
+    let sameColorCount = 0 ;
+    let oneNumCount = 0 ;
+    let sameNumCount = 0 ;
     switch(turn) { 
         case 'first turn' :
             tailList.forEach(tail => {
                 sum += tail.num ;
             }) ;
-            if (sum < 30) return ;
-        case 'same num' :
-            tailList.forEach(tail => {
-                checkData.push(tail) ;
-            }) ;
-            return ;
-        case 'same color' :
-            return ;
+            if (sum < 30) return false ;
+        case 'turn' :
+            for(let i = 0 ; i < tailList.length - 1 ; i++) {
+                if(tailList[i].num === tailList[i + 1].num)
+                    sameNumCount++ ;
+                if(tailList[i].num + 1 === tailList[i + 1].num)
+                    oneNumCount++ ;
+            }
+            if (sameNumCount !== 3) return false ;
+            if (oneNumCount !== 3) return false ;
+            for(let i = 0 ; i < tailList.length - 1 ; i++) {
+                if(tailList[i].color === tailList[i + 1].color)
+                    sameColorCount++ ;
+            }
+            console.log(`sameNumCount : ${sameNumCount} sameColorCount : ${sameColorCount} oneNumCount : ${oneNumCount}`)
+            if(sameNumCount === 3 && sameColorCount === 0) return true ;
+            if(oneNumCount === 3 && sameColorCount === 3) return true ;
         default : 
-        return ;
+            return true ;
     }
 }
 
@@ -45,7 +54,6 @@ const userTailReducer = (
     state = { 
         userTail : [ ...tailData.slice(0, 14) ],
         selectTail : [],
-        moveTail : [],
         tailSection : [ 
             { 
                 x : 0, 
@@ -54,6 +62,7 @@ const userTailReducer = (
                 data : [ ...tailData.slice(14, 17) ] 
             } 
         ],
+        checkValue : false,
     },
     action
 ) => {
@@ -87,6 +96,7 @@ const userTailReducer = (
                     type : TAIL_ADD,
                     tail : newTail
                 }),
+                checkValue : checkTail('turn', [...state.selectTail, newTail])
             }
         case RESET_POSITION :
             return {

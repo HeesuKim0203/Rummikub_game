@@ -17,6 +17,7 @@ for(let i = 0 ; i < COLOR_NUM ; i++) {
             tailData[count].x = 0 ;
             tailData[count].y = 0 ;
             tailData[count].select = false ;
+            tailData[count].section = false ;
             tailData[count].id = count++ ;
         }
     }
