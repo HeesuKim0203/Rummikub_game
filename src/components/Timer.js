@@ -5,9 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
 import { faClock } from '@fortawesome/free-solid-svg-icons' ;
 
 import { connect } from 'react-redux' ;
-import createAction from '../storeEX/action' ;
 
 import { LNITIAL_TIME } from './util' ;
+import { createAction } from '../store';
 
 const Container = styled.div`
     width : 100% ;
@@ -46,35 +46,35 @@ const TimeText = styled.span`
     text-align : center ;
 `;
 
-const Timer = ({ time, timeUpdate  }) => {
+const Timer = ({ time, updateTime  }) => {
 
     const callBack = useRef() ;
     let clearTime ;
 
     callBack.current = () => {
-        timeUpdate(time - 1) ;
+        updateTime(time - 1) ;
     } ;
     
-    // useEffect(() => {
-    //     clearTime = setInterval(tick, 1000) ;
-    //     function tick() {
-    //         callBack.current() ;
-    //     }
-    // }, []) ;
+    useEffect(() => {
+        clearTime = setInterval(tick, 1000) ;
+        function tick() {
+            callBack.current() ;
+        }
+    }, []) ;
 
-    // useEffect(() => {
-    //     if(time === 0) {
-    //         console.log('턴 종료') ;
-    //         timeUpdate(time + LNITIAL_TIME) ;
-    //         clearInterval(clearTime) ;
-    //     }
-    // }, [time]) ;
+    useEffect(() => {
+        if(time === 0) {
+            console.log('턴 종료') ;
+            updateTime(time + LNITIAL_TIME) ;
+            clearInterval(clearTime) ;
+        }
+    }, [time]) ;
 
     return (
         <Container>
             <FontAwesomeIcon
                 icon={faClock}
-                size={"2x"}
+                size="2x"
             />
             <Time>
                 <TimeCount time={time}/>
@@ -93,8 +93,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        timeUpdate : time => {
-            dispatch( createAction.timeUpdate(time)) ;
+        updateTime : time => {
+            dispatch( createAction.updateTime(time)) ;
         }
     }
 }

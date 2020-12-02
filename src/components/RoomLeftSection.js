@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
 import { faUser } from '@fortawesome/free-solid-svg-icons' ;
 
 const Container = styled.div`
-    width : 12% ;
+    width : 8% ;
     height : 100% ;
     border : 1px solid #111 ;
 `;
@@ -46,19 +46,19 @@ const RoomLeftSection = () => {
         <Container>
             <UserUl>
                 <UserLi>
-                    <FontAwesomeIcon icon={faUser} size="8x"/>
+                    <FontAwesomeIcon icon={faUser} size="5x"/>
                     <CardNumText>0</CardNumText>
                 </UserLi>
                 <UserLi>
-                    <FontAwesomeIcon icon={faUser} size="8x"/>
+                    <FontAwesomeIcon icon={faUser} size="5x"/>
                     <CardNumText>0</CardNumText>
                 </UserLi>
                 <UserLi>
-                    <FontAwesomeIcon icon={faUser} size="8x"/>
+                    <FontAwesomeIcon icon={faUser} size="5x"/>
                     <CardNumText>0</CardNumText>
                 </UserLi>
                 <UserLi>
-                    <FontAwesomeIcon icon={faUser} size="8x"/>
+                    <FontAwesomeIcon icon={faUser} size="5x"/>
                     <CardNumText>0</CardNumText>
                 </UserLi>
             </UserUl>

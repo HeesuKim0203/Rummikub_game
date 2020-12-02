@@ -7,23 +7,17 @@ import Tail from './Tail' ;
 import { TAIL_WIDTH } from './util' ;
 
 const Container = styled.div`
-
-    width : ${`${TAIL_WIDTH * 3 + 10}px`} ;
-
-    position : fixed ;
-    
-    top : 376px ;
-    left : 170px ;
-`;
-
-const Title = styled.h4`
-    margin-bottom : 3px ;
-    text-align : center ;
+    width : 100% ;
+    height : 100% ;
 `;
 
 const SelectTailContainer = styled.div`
+
+    width : 100% ;
+    height : 100% ;
     display : flex ;
     flex-direction : row ;
+    align-items : center ;
     
     border-radius : 5px ; 
 `;
@@ -31,13 +25,12 @@ const SelectTailContainer = styled.div`
 const SelectTail = ({ selectTail }) => {
     return (
         <Container>
-            <Title>Select Tail</Title>
             <SelectTailContainer>
                 {selectTail && selectTail.map((tail, index) =>
                     <Tail 
                         key={index}
                         tail={tail}
-                        fixed={true}
+                        select={true}
                     />
                 )}
             </SelectTailContainer>

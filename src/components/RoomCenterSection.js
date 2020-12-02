@@ -1,15 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react' ;
+import React  from 'react' ;
 import styled from 'styled-components' ;
 
 import Tail from './Tail' ;
 import SelectTail from './SelectTail' ;
 import Timer from './Timer' ;
-import AuthorTailSection from './AuthorTailSection' ;
 import { connect } from 'react-redux';
 
 // tile이 만나는 zone
 const Container = styled.div`
-    width : 75% ;
+    width : 82% ;
     height : 100% ;
 
     border : 1px solid #111 ;
@@ -26,18 +25,27 @@ const TimerZone = styled.div`
 
 const GameZone = styled.div`
     width : 100% ;
-    height : 75% ;
+    height : 60% ;
 
     border-bottom : 1px solid #111 ;
 
     display : flex ;
+    align-content: flex-start ;
     flex-wrap : wrap ;
+`;
+
+const SelectTailZone = styled.div`
+    width : 100% ;
+    height : 13% ;
+    
+    border-top : 1px solid #111 ;
+    border-bottom : 1px solid #111 ;
 `;
 
 // tile 두는 zone
 const TailZone = styled.div`
     width : 100% ;
-    height : 20% ;
+    height : 22% ;
 `;
 
 const TailZoneStairs = styled.div`
@@ -45,6 +53,7 @@ const TailZoneStairs = styled.div`
     height : 50% ;
     
     display : flex ;
+    align-items : center ;
     flex-direction : row ;
 
     &:not(:last-child) {
@@ -52,51 +61,44 @@ const TailZoneStairs = styled.div`
     }
 `;
 
-const RoomCenterSection = ({ userTail, moveTail, tailSection }) => {
-    const ContainerElement = useRef() ;
+const OneTail = styled.div`
+    width : 47px ;
+    height : 62px ;
+    
+    border :  1px solid #111 ;
+`;
 
-    const [ContainerX, setContainerX ] = useState(0) ;
-    const [ContainerY, setContainerY ] = useState(0) ;
+const RoomCenterSection = ({ userTail }) => {
 
-    useEffect(() => {
-        const { x, y } =  ContainerElement.current.getBoundingClientRect() ;
+    const data = [] ;
 
-        setContainerX(x) ;
-        setContainerY(y) ;
-
-    }, []) ;
+    for(let i = 0 ; i < 106 ; i++) {
+        data[i] = {} ;
+    }
 
     return (
-        <Container ref={ContainerElement}>
+        <Container>
             <TimerZone>
                 <Timer/>
             </TimerZone>
-            <SelectTail />
             <GameZone>
-                {tailSection && tailSection.map((tails, index) => (
-                    <AuthorTailSection 
+                { data.map((tail, index) => (
+                    <OneTail
                         key={index}
-                        id={index}
-                        tails={tails} 
-                    />
+                    >
+                        {index} 
+                    </OneTail>
                 ))}
             </GameZone>
+            <SelectTailZone>
+                <SelectTail />
+            </SelectTailZone>
             <TailZone>
                 <TailZoneStairs>
                     {userTail && userTail.map((tail, index) =>
                         <Tail 
                             key={index}
                             tail={tail}
-                            ContainerX={ContainerX}
-                            ContainerY={ContainerY}
-                        />
-                    )}
-                    {moveTail && moveTail.map((tail, index) =>
-                        <Tail 
-                            key={index}
-                            tail={tail}
-                            ContainerX={ContainerX}
-                            ContainerY={ContainerY}
                         />
                     )}
                 </TailZoneStairs>
@@ -110,13 +112,13 @@ const RoomCenterSection = ({ userTail, moveTail, tailSection }) => {
 
 function mapStateToProps(state) {
    const { 
-       tail : { userTail, tailSection, moveTail, selectTail } 
+       tail : { userTail } 
     } = state ;
 
     return {
         userTail,
-        moveTail,
-        tailSection : tailSection.map(tails => tails.data)
+        // selectTail
+        // tailSection : tailSection.map(tails => tails.data)
     } ;
 }
 

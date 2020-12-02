@@ -14,11 +14,7 @@ for(let i = 0 ; i < COLOR_NUM ; i++) {
         for(let j = 0 ; j < CARD_NUM ; j++) {
             tailData.push({ color :  color[i] }) ;
             tailData[count].num = j + 1 ;
-            tailData[count].x = 0 ;
-            tailData[count].y = 0 ;
-            tailData[count].select = false ;
-            tailData[count].section = false ;
-            tailData[count].sectionNum = undefined ;
+            tailData[count].type = '' ;
             tailData[count].id = count++ ;
         }
     }
@@ -26,18 +22,14 @@ for(let i = 0 ; i < COLOR_NUM ; i++) {
 
 tailData.push({
     color : DARK_GRAY,
+    type : '',
     num : -1,
-    x : 0,
-    y : 0,
-    select : false,
     id : count++
 }) ;
 tailData.push({
     color : DARK_RED,
+    type : '',
     num : -1,
-    x : 0,
-    y : 0,
-    select : false,
     id : count++
 }) ;
 

@@ -13,9 +13,8 @@ import rest from 'styled-reset' ;
 const GlobalStyled = createGlobalStyle`
     ${rest}
     #root {
-        width : 1250px ;
-        height : 575px ;
-        margin : auto ;
+        width : 100% ;
+        height : 574px ;
         font-size : 12px ;
     }
     * {

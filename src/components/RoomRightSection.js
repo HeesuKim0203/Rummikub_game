@@ -5,11 +5,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' ;
 import { faDotCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons' ;
 
 import { connect } from 'react-redux' ;
-import createAction from '../storeEX/action' ;
+// import createAction from '../storeEX/action' ;
 
 // button 모음 zone
 const Container = styled.div`
-    width : 13% ;
+    width : 8% ;
     height : 100% ;
 
     border : 1px solid #111 ;
@@ -18,7 +18,7 @@ const Container = styled.div`
 const Button = styled.button`
     all : unset ;
     
-    width : 135px ;
+    width : 90px ;
     height : 35px ;
 
     border : 1px solid #111 ;
@@ -62,7 +62,7 @@ const Form = styled.form`
 `;
 
 const NextTurnButton = styled(Button)`
-    height : 200px ;
+    height : 150px ;
 `;
 
 const CodeText = styled.span`
@@ -134,12 +134,12 @@ const RoomRightSection = ({ resetPosition, ascTail }) => {
 
 function mapDispatchToProps(dispatch) {
     return {
-        resetPosition : () => {
-            dispatch(createAction.resetPosition()) ;
-        },
-        ascTail : () => {
-            dispatch(createAction.ascTail()) ;
-        },
+        // resetPosition : () => {
+        //     dispatch(createAction.resetPosition()) ;
+        // },
+        // ascTail : () => {
+        //     dispatch(createAction.ascTail()) ;
+        // },
     }
 }
 
