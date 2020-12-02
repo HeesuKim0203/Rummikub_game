@@ -65,7 +65,14 @@ const userTailReducer = (
             }
         case RESET_POSITION :
             const tailSectionPosition = [] ;
-            const moveTailInUserTail = [ ...state.moveTail.filter(tail => tail.sectionNum === undefined) ] ;
+            const moveTailInUserTail = [ 
+                ...state.moveTail.filter(tail => tail.sectionNum === undefined)
+                    .map(tail => ({ ...tail, select : false })),
+                ...state.tailSection.map(tails => tails.data).reduce((prev, tails) => {
+                    prev = tails.filter(tail => tail.sectionNum === undefined) ;
+                    return prev ;
+                }, [])
+            ] ;
             for(let i = 0 ; i < state.tailSection.length ; i++) {
                 const array =  [ ...state.tailSection[i].data.filter(tail => tail.sectionNum === i), ...state.moveTail.filter(tail => tail.sectionNum === i) ] ;
                 tailSectionPosition[i] = {
@@ -118,7 +125,7 @@ const userTailReducer = (
                             ...action.tail, 
                             select : false, 
                             section : action.id, 
-                            sectionNum : false 
+                            sectionNum : undefined 
                         } 
                     ].sort((a, b) => a.num - b.num)
             } ;

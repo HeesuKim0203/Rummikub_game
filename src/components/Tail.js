@@ -139,14 +139,15 @@ const Tail = ({
                 if((moveTailNum === 0 || !overlappingCheckValue) && typeof tail.section !== 'number')
                     tailClickOut(tail, x, y) ;
 
-                if(typeof tail.section === 'number') {
+                if(typeof tail.sectionNum === 'number') {
                     moveTailFun(tail.section, tail, x, y, select)
                 }
 
             }else {
-                setSelect(false) ;
+                if(tail.sectionNum === undefined)
+                    setSelect(false) ;
 
-                if(moveTailNum > 0 && overlappingCheckValue)
+                if((moveTailNum > 0 && overlappingCheckValue) && tail.sectionNum === undefined)
                     tailClick(tail, x, y) ;
             }
         }
